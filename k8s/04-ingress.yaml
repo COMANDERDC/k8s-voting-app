@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: voting-ingress
+  namespace: voting-system
+  annotations:
+    # Zapobiega zrywaniu połączeń strumieniowych SSE przez Nginx Ingress
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: glosowanie.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: glosowanie-service
+            port:
+              number: 80
